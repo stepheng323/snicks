@@ -13,7 +13,7 @@ export const validateSignup = async (req, res, next) => {
 
   const result = await joiValidator(req.body, schema);
   if (!result) return next();
-  return respondWithWarning(res, 404, 'Bad request', result);
+  return respondWithWarning(res, 400, result);
 };
 
 export const validateLogin = async (req, res, next) => {
@@ -24,5 +24,5 @@ export const validateLogin = async (req, res, next) => {
 
   const result = await joiValidator(req.body, schema);
   if (!result) return next();
-  return respondWithWarning(res, 404, 'Bad request', result);
+  return respondWithWarning(res, 400, result);
 };

@@ -1,0 +1,19 @@
+sudo: false
+
+language: node_js
+
+node_js:
+  - node
+
+services:
+  - postgresql
+
+notifications:
+  email: false
+
+install:
+  - npm install
+
+before_script:
+  - npm i -g sequelize-cli
+  - psql -c 'create database snicks_test;' -U postgres
