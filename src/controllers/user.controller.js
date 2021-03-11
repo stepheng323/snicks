@@ -11,9 +11,7 @@ import Model from '../models/index';
 const { User } = Model;
 
 export const createUser = catchAsync(async (req, res, next) => {
-  const {
-    email, password, firstName, lastName
-  } = req.body;
+  const { email, password } = req.body;
   const userExist = await User.findOne({ where: { email } });
   if (userExist) return respondWithWarning(res, 409, 'a user with the email exist', {});
   const hashedPassword = await hashPassword(password);
@@ -44,10 +42,10 @@ export const createUser = catchAsync(async (req, res, next) => {
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
-  if (!user) return respondWithWarning(res, 404, 'incorrect email or password combination');
+  if (!user) return respondWithWarning(res, 401, 'incorrect email or password combination');
   const { dataValues, dataValues: { password: hashedPassword } } = user;
   const passwordMatch = await comparePassword(password, hashedPassword);
-  if (!passwordMatch) return respondWithWarning(res, 400, 'incorrect email or password combination2');
+  if (!passwordMatch) return respondWithWarning(res, 401, 'incorrect email or password combination');
   dataValues.password = undefined;
   dataValues.createdAt = undefined;
   dataValues.updatedAt = undefined;
@@ -58,7 +56,7 @@ export const login = catchAsync(async (req, res, next) => {
     maxAge: 604800000,
     httpOnly: true,
   });
-  return respondWithSuccess(res, 201, 'User created successfully', {
+  return respondWithSuccess(res, 200, 'User created successfully', {
     ...dataValues,
     ...tokenAndTokenExpiry,
   });

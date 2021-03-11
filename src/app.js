@@ -44,6 +44,7 @@ if (process.env.NODE_ENV === 'development') {
   });
 } else {
   app.use((error, req, res, next) => {
+    console.log(error.message);
     respondWithWarning(res, error.status || 500, error.message, {});
   });
 }
