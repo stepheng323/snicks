@@ -15,5 +15,5 @@ install:
   - npm install
 
 before_script:
-  - yarn global add nyc
+  - npm i -g sequelize-cli
   - psql -c 'create database snicks_test;' -U postgres
