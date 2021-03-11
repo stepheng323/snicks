@@ -8,8 +8,8 @@
     "start": "node dist/app.js",
     "dev": "nodemon --exec babel-node src/app.js",
     "build": "rm -rf dist/ && babel src/ -d dist/",
-    "migration": "sequelize db:migrate",
-    "migration:rollback": "sequelize db:migrate:undo:all",
+    "migration": "./node_modules/.bin/sequelize db:migrate",
+    "migration:rollback": "./node_modules/.bin/sequelize db:migrate:undo:all",
     "migration:refresh": "npm run migration:rollback && npm run migration",
     "migration:refresh:test": "NODE_ENV=test npm run migration:rollback && NODE_ENV=test npm run migration",
     "db:seed": "sequelize db:seed:all --debug"
