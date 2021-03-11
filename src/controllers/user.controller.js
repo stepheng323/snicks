@@ -42,10 +42,25 @@ export const createUser = catchAsync(async (req, res, next) => {
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
-  if (!user) return respondWithWarning(res, 401, 'incorrect email or password combination');
-  const { dataValues, dataValues: { password: hashedPassword } } = user;
+  if (!user) {
+    return respondWithWarning(
+      res,
+      401,
+      'incorrect email or password combination'
+    );
+  }
+  const {
+    dataValues,
+    dataValues: { password: hashedPassword },
+  } = user;
   const passwordMatch = await comparePassword(password, hashedPassword);
-  if (!passwordMatch) return respondWithWarning(res, 401, 'incorrect email or password combination');
+  if (!passwordMatch) {
+    return respondWithWarning(
+      res,
+      401,
+      'incorrect email or password combination'
+    );
+  }
   dataValues.password = undefined;
   dataValues.createdAt = undefined;
   dataValues.updatedAt = undefined;
