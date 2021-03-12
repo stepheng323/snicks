@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './docs/swagger.json';
+import swaggerDocument from './docs/swagger';
 import { PORT } from './config/contants';
 import apiRouter from './routes/index';
 import { respondWithWarning } from './helpers/reponseHandler';
@@ -12,7 +12,7 @@ import { respondWithWarning } from './helpers/reponseHandler';
 const app = express();
 
 const whitelist = [
-  'http://localhost:3000',
+  'http://localhost:4000',
 ];
 const corsOptions = {
   origin(origin, callback) {
