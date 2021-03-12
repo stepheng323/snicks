@@ -71,7 +71,7 @@ export const login = catchAsync(async (req, res, next) => {
     maxAge: 604800000,
     httpOnly: true,
   });
-  return respondWithSuccess(res, 200, 'User created successfully', {
+  return respondWithSuccess(res, 200, 'User logged in successfully', {
     ...dataValues,
     ...tokenAndTokenExpiry,
   });
