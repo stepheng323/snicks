@@ -3,6 +3,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './docs/swagger.json';
 import { PORT } from './config/contants';
 import apiRouter from './routes/index';
 import { respondWithWarning } from './helpers/reponseHandler';
@@ -31,6 +33,7 @@ app.use(cors(corsOptions));
 app.use(morgan('dev'));
 
 app.use(apiRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('*', (req, res, next) => {
   const error = new Error('Not found');
