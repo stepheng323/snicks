@@ -7,13 +7,17 @@ import { hashPassword, comparePassword } from '../helpers/bcrypt';
 import { generateTokenAndExpiry, signRefreshToken } from '../helpers/jwt';
 
 import Model from '../models/index';
+import { sendMail } from '../helpers/nodemailer';
+import { generateForgotPasswordEmail } from '../utils/email';
 
 const { User } = Model;
 
 export const createUser = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const userExist = await User.findOne({ where: { email } });
-  if (userExist) return respondWithWarning(res, 409, 'a user with the email exist', {});
+  if (userExist) {
+    return respondWithWarning(res, 409, 'a user with the email exist', {});
+  }
   const hashedPassword = await hashPassword(password);
   const user = await User.create({
     ...req.body,
@@ -75,4 +79,27 @@ export const login = catchAsync(async (req, res, next) => {
     ...dataValues,
     ...tokenAndTokenExpiry,
   });
+});
+
+export const forgotPassword = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ where: { email } });
+  let token;
+  if (user) {
+    const result = await generateTokenAndExpiry({ email }, { expiresIn: '1h' });
+    token = result.token;
+    const { firstName } = user.dataValues;
+    const emailBody = generateForgotPasswordEmail(firstName, token);
+    const data = {
+      to: email,
+      subject: 'Your Snicks Account',
+      body: emailBody,
+    };
+    await sendMail(data);
+  }
+  return respondWithSuccess(
+    res,
+    200,
+    `If an account exist for ${email}, you will recieve password reset instruction`
+  );
 });
