@@ -175,7 +175,7 @@ describe('Auth Test', () => {
       chai
         .request(app)
         .post(`${baseUrl}/forgot-password`)
-        .send({ email: 'stepheng323@gmail.com' }) // valid email
+        .send({ email: 'johndoe@gmail.com' }) // valid email
         .end((err, res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.have.property('success');
