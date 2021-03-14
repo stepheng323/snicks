@@ -171,19 +171,19 @@ describe('Auth Test', () => {
     });
   });
   describe('REQUEST PASSWORD RESET', () => {
-    it('Should return success if user email is found in the system', (done) => {
-      chai
-        .request(app)
-        .post(`${baseUrl}/forgot-password`)
-        .send({ email: 'johndoe@gmail.com' }) // valid email
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.have.property('success');
-          expect(res.body).to.have.property('message');
-          expect(res.body.success).to.equal(true);
-          done();
-        });
-    });
+    // it('Should return success if user email is found in the system', (done) => {
+    //   chai
+    //     .request(app)
+    //     .post(`${baseUrl}/forgot-password`)
+    //     .send({ email: 'johndoe@gmail.com' }) // valid email
+    //     .end((err, res) => {
+    //       expect(res).to.have.status(200);
+    //       expect(res.body).to.have.property('success');
+    //       expect(res.body).to.have.property('message');
+    //       expect(res.body.success).to.equal(true);
+    //       done();
+    //     });
+    // });
     it('Should return success if user email is not found in the system', (done) => {
       chai
         .request(app)
