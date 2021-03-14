@@ -72,7 +72,6 @@
         }
       }
     },
-
     "/user/login": {
       "post": {
         "tags": ["user"],
@@ -108,6 +107,40 @@
             "description": "Invalid email/password combination",
             "schema": {
               "$ref": "#/definitions/InvalidLogin"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerError"
+            }
+          }
+        }
+      }
+    },
+    "/user/forgot-password": {
+      "post": {
+        "tags": ["user"],
+        "summary": "User make a password rest request",
+        "description": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Email address",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+     
+          },
+          "400": {
+            "description": "Invalid login parameters",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
             }
           },
           "500": {

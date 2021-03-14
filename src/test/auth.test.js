@@ -5,6 +5,7 @@ import app from '../app';
 const { expect } = chai;
 chai.use(chaiHttp);
 
+const baseUrl = '/api/v1/user';
 const signupUrl = '/api/v1/user';
 const loginUrl = '/api/v1/user/login';
 
@@ -144,7 +145,9 @@ describe('Auth Test', () => {
           expect(res).to.have.status(401);
           expect(res.body).to.be.an('object');
           expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.equal('incorrect email or password combination');
+          expect(res.body.message).to.equal(
+            'incorrect email or password combination'
+          );
           done();
         });
     });
@@ -160,7 +163,37 @@ describe('Auth Test', () => {
           expect(res).to.have.status(401);
           expect(res.body).to.be.an('object');
           expect(res.body.success).to.equal(false);
-          expect(res.body.message).to.equal('incorrect email or password combination');
+          expect(res.body.message).to.equal(
+            'incorrect email or password combination'
+          );
+          done();
+        });
+    });
+  });
+  describe('PASSWORD RESET', () => {
+    it('Should return success if user email is found in the system', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/forgot-password`)
+        .send({ email: 'johndoe@gmail.com' }) // valid email
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('success');
+          expect(res.body).to.have.property('message');
+          expect(res.body.success).to.equal(true);
+          done();
+        });
+    });
+    it('Should return success if user email is not found in the system', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/forgot-password`)
+        .send({ email: 'emailnotexist@gmail.com' }) // no such email in the system
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.property('success');
+          expect(res.body).to.have.property('message');
+          expect(res.body.success).to.equal(true);
           done();
         });
     });

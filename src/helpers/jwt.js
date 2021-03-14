@@ -20,8 +20,7 @@ export const signRefreshToken = async (data) => {
   return refreshToken;
 };
 
-export const verifyToken = (token) =>
-  Jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+export const verifyToken = (token) => Jwt.verify(token, process.env.TOKEN_SECRET_KEY);
 
 export const verifyRefreshToken = (refreshToken) => {
   const refToken = Jwt.verify(refreshToken, REFRESH_TOKEN_SECRET_KEY);

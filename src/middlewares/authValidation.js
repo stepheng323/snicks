@@ -26,3 +26,12 @@ export const validateLogin = async (req, res, next) => {
   if (!result) return next();
   return respondWithWarning(res, 400, result);
 };
+
+export const validateForgotPassword = async(req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+  });
+  const result = await joiValidator(req.body, schema);
+  if (!result) return next();
+  return respondWithWarning(res, 400, result);
+}
