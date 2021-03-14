@@ -1,11 +1,7 @@
-import { catchAsync } from '../utils';
-import {
-  respondWithSuccess,
-  respondWithWarning,
-} from '../helpers/reponseHandler';
+import { catchAsync, stripeUserData } from '../utils';
+import { respondWithSuccess, respondWithWarning } from '../helpers/reponseHandler';
 import { hashPassword, comparePassword } from '../helpers/bcrypt';
-import { generateTokenAndExpiry, signRefreshToken } from '../helpers/jwt';
-
+import { generateTokenAndExpiry, signRefreshToken, verifyToken } from '../helpers/jwt';
 import Model from '../models/index';
 import { sendMail } from '../helpers/nodemailer';
 import { generateForgotPasswordEmail } from '../utils/email';
@@ -24,12 +20,11 @@ export const createUser = catchAsync(async (req, res, next) => {
     password: hashedPassword,
     role: 'user',
   });
+
   const { dataValues } = user;
-  dataValues.password = undefined;
-  dataValues.createdAt = undefined;
-  dataValues.updatedAt = undefined;
-  const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...dataValues });
-  const refreshToken = await signRefreshToken({ ...dataValues });
+  const userData = stripeUserData(dataValues);
+  const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...userData });
+  const refreshToken = await signRefreshToken({ ...userData });
 
   res.cookie('refreshToken', refreshToken, {
     maxAge: 604800000,
@@ -37,7 +32,7 @@ export const createUser = catchAsync(async (req, res, next) => {
   });
 
   return respondWithSuccess(res, 201, 'User created successfully', {
-    ...dataValues,
+    ...userData,
     ...tokenAndTokenExpiry,
     refreshToken,
   });
@@ -65,18 +60,16 @@ export const login = catchAsync(async (req, res, next) => {
       'incorrect email or password combination'
     );
   }
-  dataValues.password = undefined;
-  dataValues.createdAt = undefined;
-  dataValues.updatedAt = undefined;
-  const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...dataValues });
-  const refreshToken = await signRefreshToken({ ...dataValues });
+  const userData = stripeUserData(dataValues);
+  const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...userData });
+  const refreshToken = await signRefreshToken({ ...userData });
 
   res.cookie('refreshToken', refreshToken, {
     maxAge: 604800000,
     httpOnly: true,
   });
   return respondWithSuccess(res, 200, 'User logged in successfully', {
-    ...dataValues,
+    ...userData,
     ...tokenAndTokenExpiry,
   });
 });
@@ -86,7 +79,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ where: { email } });
   let token;
   if (user) {
-    const result = await generateTokenAndExpiry({ email }, { expiresIn: '1h' });
+    const result = await generateTokenAndExpiry({ email }, '1h');
     token = result.token;
     const { firstName } = user.dataValues;
     const emailBody = generateForgotPasswordEmail(firstName, token);
@@ -102,4 +95,33 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
     200,
     `If an account exist for ${email}, you will recieve password reset instruction`
   );
+});
+
+export const resetForgotPassword = catchAsync(async (req, res, next) => {
+  const { resetToken } = req.query;
+  const { password } = req.body;
+  if (!resetToken) {
+    return respondWithWarning(res, 400, 'No token provided');
+  }
+  const { email } = verifyToken(resetToken);
+  const hashedPassword = await hashPassword(password);
+  const result = await User.update(
+    { password: hashedPassword },
+    { where: { email }, returning: true, plain: true }
+  );
+
+  const user = result[1].dataValues;
+  const userData = stripeUserData(user);
+  const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...userData });
+  const refreshToken = await signRefreshToken({ ...userData });
+
+  res.cookie('refreshToken', refreshToken, {
+    maxAge: 604800000,
+    httpOnly: true,
+  });
+
+  return respondWithSuccess(res, 200, 'password updated successfully', {
+    ...user,
+    ...tokenAndTokenExpiry,
+  });
 });

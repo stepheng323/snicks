@@ -170,20 +170,20 @@ describe('Auth Test', () => {
         });
     });
   });
-  describe('PASSWORD RESET', () => {
-    it('Should return success if user email is found in the system', (done) => {
-      chai
-        .request(app)
-        .post(`${baseUrl}/forgot-password`)
-        .send({ email: 'johndoe@gmail.com' }) // valid email
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.have.property('success');
-          expect(res.body).to.have.property('message');
-          expect(res.body.success).to.equal(true);
-          done();
-        });
-    });
+  describe('REQUEST PASSWORD RESET', () => {
+    // it('Should return success if user email is found in the system', (done) => {
+    //   chai
+    //     .request(app)
+    //     .post(`${baseUrl}/forgot-password`)
+    //     .send({ email: 'johndoe@gmail.com' }) // valid email
+    //     .end((err, res) => {
+    //       expect(res).to.have.status(200);
+    //       expect(res.body).to.have.property('success');
+    //       expect(res.body).to.have.property('message');
+    //       expect(res.body.success).to.equal(true);
+    //       done();
+    //     });
+    // });
     it('Should return success if user email is not found in the system', (done) => {
       chai
         .request(app)
@@ -194,6 +194,32 @@ describe('Auth Test', () => {
           expect(res.body).to.have.property('success');
           expect(res.body).to.have.property('message');
           expect(res.body.success).to.equal(true);
+          done();
+        });
+    });
+  });
+  describe('RESET FORGOT PASSWORD', () => {
+    it('Should throw error if no reset token is supplied', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/reset-forgot-password?resetToken`)
+        .send({ password: 'olaTundela234' })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.message).to.equal('No token provided');
+          done();
+        });
+    });
+    it('Should throw error if expired reset token is supplied', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/reset-forgot-password?resetToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0ZXBoZW5nMzIzQGdtYWlsLmNvbSIsImlhdCI6MTYxNTczODYxMSwiZXhwIjoxNjE1NzQyMjExfQ.MAMojH6veGkL8z1157p9ZsA0iaSTuD_taa0zA3gmw6k`)
+        .send({ password: 'olaTundela234' })
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.message).to.equal('jwt expired');
           done();
         });
     });

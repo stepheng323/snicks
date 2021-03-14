@@ -5,9 +5,9 @@ import {
   REFRESH_TOKEN_SECRET_KEY,
 } from '../config/contants';
 
-export const generateTokenAndExpiry = async (data) => {
+export const generateTokenAndExpiry = async (data, expiresIn) => {
   const token = await Jwt.sign(data, TOKEN_SECRET_KEY, {
-    expiresIn: TOKEN_EXPIRATION,
+    expiresIn: expiresIn || TOKEN_EXPIRATION,
   });
   const { exp: tokenExpiry } = Jwt.decode(token);
   return { token, tokenExpiry };
