@@ -1,7 +1,7 @@
 import { FRONT_END_BASE_URL } from '../config/contants';
 
 export const generateForgotPasswordEmail = (firstName, token) => {
-  const link = `${FRONT_END_BASE_URL}/forgot-password?${token}`;
+  const link = `${FRONT_END_BASE_URL}/reset-forgot-password?resetToken=${token}`;
   return `<p>Dear ${firstName},</p>
   <p> Did you forget your password? No problem - click on the link below to change it now.</p>
   <p><a href=${link}>Reset Password</a></p>
