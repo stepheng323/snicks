@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { addProduct } from '../../controllers/product.controller';
+import { addProduct, getPresignedUrl } from '../../controllers/product.controller';
 import { checkAuth, restrictTo } from '../../middlewares/auth';
+import { validateAddProduct } from '../../middlewares/productValidation';
 
 const product = Router();
 
-product.post('/', checkAuth, restrictTo('admin'), addProduct);
+product.post('/presignUrl', checkAuth, restrictTo('admin'), getPresignedUrl);
+product.post('/', checkAuth, restrictTo('admin'), validateAddProduct, addProduct);
 
 export default product;

@@ -16,18 +16,17 @@ export default (sequelize, DataTypes) => {
       },
       specification: {
         type: DataTypes.TEXT,
-        allowNull: false,
       },
       images: {
         type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: true,
+        allowNull: false,
       },
       price: {
         type: DataTypes.DECIMAL(20, 4).UNSIGNED,
         allowNull: false,
       },
-      brand: {
-        type: DataTypes.STRING,
+      brandId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       color: {
@@ -35,7 +34,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
       },
       size: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
     },

@@ -9,7 +9,6 @@ export default {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         unique: true,
         references: {
           model: 'Users',
@@ -26,7 +25,6 @@ export default {
       },
       specification: {
         type: Sequelize.TEXT,
-        allowNull: false,
       },
       images: {
         type: Sequelize.ARRAY(Sequelize.STRING),
@@ -36,25 +34,33 @@ export default {
         type: Sequelize.DECIMAL(20, 4).UNSIGNED,
         allowNull: false,
       },
-      brand: {
-        type: Sequelize.STRING,
+      brandId: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+        references: {
+          model: 'Brands',
+          key: 'id'
+        }
       },
       color: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       size: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW'),
+
       },
     });
   },
