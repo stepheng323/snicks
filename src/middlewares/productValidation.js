@@ -9,8 +9,8 @@ export const validateAddProduct = async (req, res, next) => {
     specification: Joi.string(),
     price: Joi.number().required(),
     brandId: Joi.number().required(),
-    color: Joi.string().required(),
-    size: Joi.array().required(),
+    colors: Joi.array().required(),
+    sizes: Joi.array().required(),
     images: Joi.array().required(),
   });
 

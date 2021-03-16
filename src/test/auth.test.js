@@ -18,8 +18,8 @@ describe('Auth Test', () => {
         .send({
           firstName: 'Gaines',
           lastName: 'God',
-          email: 'stepheng323@gmail.com', // valid signup details
-          password: 'olaTUNDELA2345',
+          email: 'sgagnonpie@gmail.com', // valid signup details
+          password: 'olatundela234',
           phone: '+2348162511023',
         })
         .end((error, res) => {
@@ -62,7 +62,7 @@ describe('Auth Test', () => {
         .send({
           firstName: 'Gaines',
           lastName: 'God',
-          password: 'olaTUNDELA2345',
+          password: 'olatundela234',
           phone: '+2348162511023',
         })
         .end((error, res) => {
@@ -80,7 +80,7 @@ describe('Auth Test', () => {
         .post(signupUrl)
         .send({
           email: 'stepheng323@gmail.com',
-          password: 'olaTundela234',
+          password: 'olatundela234',
           lastName: 'oyebanji',
           phone: '0802344455',
         })
@@ -98,7 +98,7 @@ describe('Auth Test', () => {
         .post(signupUrl)
         .send({
           email: 'stepheng323@gmail.com',
-          password: 'olaTundela234',
+          password: 'olatundela234',
           firstName: 'stephen',
           phone: '0802344455',
         })
@@ -118,7 +118,7 @@ describe('Auth Test', () => {
         .post(loginUrl)
         .send({
           email: 'stepheng323@gmail.com', // valid login details
-          password: 'olaTUNDELA2345',
+          password: 'olatundela234',
         })
         .end((error, res) => {
           expect(res).to.have.status(200);
@@ -138,8 +138,8 @@ describe('Auth Test', () => {
         .request(app)
         .post(loginUrl)
         .send({
-          email: 'stepheng32@gmail.com', // wrong email details
-          password: 'olaTUNDELA2345',
+          email: 'nonexistent@gmail.com', // wrong email details
+          password: 'olatundela234',
         })
         .end((error, res) => {
           expect(res).to.have.status(401);

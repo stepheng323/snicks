@@ -5,7 +5,7 @@ import { validateAddProduct } from '../../middlewares/productValidation';
 
 const product = Router();
 
-product.post('/presignUrl', checkAuth, restrictTo('admin'), getPresignedUrl);
 product.post('/', checkAuth, restrictTo('admin'), validateAddProduct, addProduct);
+product.get('/presignUrl', checkAuth, restrictTo('admin'), getPresignedUrl);
 
 export default product;

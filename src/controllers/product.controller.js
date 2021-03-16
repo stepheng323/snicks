@@ -18,7 +18,7 @@ export const getPresignedUrl = catchAsync(async (req, res, next) => {
 
   const key = `${id}/${uuidv4()}.jpeg`;
   const params = {
-    Bucket: 'snics',
+    Bucket: 'snicks',
     Key: key,
     ContentType: 'image/jpeg',
   };

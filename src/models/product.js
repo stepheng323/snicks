@@ -29,11 +29,11 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      color: {
-        type: DataTypes.STRING,
+      colors: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },
-      size: {
+      sizes: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
       },

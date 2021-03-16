@@ -9,7 +9,6 @@ export default {
       },
       userId: {
         type: Sequelize.INTEGER,
-        unique: true,
         references: {
           model: 'Users',
           key: 'id'
@@ -42,11 +41,11 @@ export default {
           key: 'id'
         }
       },
-      color: {
-        type: Sequelize.STRING,
+      colors: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
-      size: {
+      sizes: {
         type: Sequelize.ARRAY(Sequelize.STRING),
         allowNull: false,
       },
