@@ -8,9 +8,17 @@ export default {
           firstName: 'John',
           lastName: 'Doe',
           email: 'johndoe@gmail.com',
-          password: 'ddmnk434HNDLADHCFVjk3493p3434',
+          password: '$2b$10$YMZelRt.7eqMmqrfiO/gLepdQWwbIf5lBFBtTtp2gfsaZOsokz8uC',
           phone: '23454666565',
           role: 'user'
+        },
+        {
+          firstName: 'Gordon',
+          lastName: 'James',
+          email: 'stepheng323@gmail.com',
+          password: '$2b$10$YMZelRt.7eqMmqrfiO/gLepdQWwbIf5lBFBtTtp2gfsaZOsokz8uC',
+          phone: '23454666565',
+          role: 'admin'
         },
       ],
       {}
