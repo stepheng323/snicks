@@ -48,7 +48,7 @@ export default (sequelize, DataTypes) => {
     });
     Product.belongsTo(models.Brand, {
       foreignKey: 'brandId',
-      as: 'brandProducts',
+      as: 'brand',
       onDelete: 'CASCADE',
     });
     Product.hasMany(models.Review, {
