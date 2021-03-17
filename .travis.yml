@@ -17,7 +17,6 @@ install:
 before_script:
   - npm i -g sequelize-cli
   - psql -c 'create database snicks_test;' -U postgres
-  
+
 script:
  - npm run coveralls
- - npm run coverage
