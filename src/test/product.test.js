@@ -18,6 +18,7 @@ const admin = {
   email: 'stepheng323@gmail.com',
   password: 'olatundela234'
 };
+
 describe('Add Product', () => {
   before(async () => {
     await chai.request(app)
@@ -298,6 +299,44 @@ describe('Add Product', () => {
         expect(res).to.have.status(400);
         expect(res.body.success).to.be.equal(false);
         expect(res.body).to.have.property('message');
+        done();
+      });
+  });
+  it('Unauthenticated user should be able to access product listing', (done) => {
+    chai
+      .request(app)
+      .get(baseUrl)
+      .query({ page: 1, limit: 1 })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
+  it('Unauthenticated user should be able to access product listing with pagination', (done) => {
+    chai
+      .request(app)
+      .get(baseUrl)
+      .query({ page: 1, limit: 4 })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body).to.have.property('message');
+        expect(res.body.payload.next).to.be.an('object');
+        done();
+      });
+  });
+  it('user should be able to access product listing without pagination', (done) => {
+    chai
+      .request(app)
+      .get(baseUrl)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body).to.have.property('message');
+        expect(res.body.payload.next).to.be.a('undefined');
+
         done();
       });
   });

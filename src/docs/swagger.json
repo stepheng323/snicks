@@ -233,6 +233,49 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": ["product"],
+        "summary": "All products",
+        "description": "View all products in the store",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "403": {
+            "description": "Insufficient permission",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/NoResultResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerError"
+            }
+          }
+        }
       }
     },
 
@@ -584,6 +627,19 @@
         "message": {
           "type": "string",
           "example": "you do not have the permission"
+        }
+      }
+    },
+    "NoResultResponse":{
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "message": {
+          "type": "string",
+          "example": "No result found"
         }
       }
     },
