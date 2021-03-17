@@ -340,4 +340,36 @@ describe('Add Product', () => {
         done();
       });
   });
+  it('user should be able to view a single product', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}/${1}`)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body).to.have.property('message');
+        expect(res.body.payload).to.be.an('object');
+        expect(res.body.payload).to.be.a.property('id');
+        expect(res.body.payload).to.be.a.property('userId');
+        expect(res.body.payload).to.be.a.property('title');
+        expect(res.body.payload).to.be.a.property('price');
+        expect(res.body.payload).to.be.a.property('sizes');
+        expect(res.body.payload).to.be.a.property('colors');
+        expect(res.body.payload).to.be.a.property('brandId');
+        expect(res.body.payload).to.be.a.property('createdAt');
+        expect(res.body.payload).to.be.a.property('updatedAt');
+        done();
+      });
+  });
+  it('Should throw error if provided id is not in the system', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}/${100}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body.success).to.be.equal(false);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
 });

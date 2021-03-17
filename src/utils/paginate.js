@@ -4,7 +4,6 @@ export const paginate = (req) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  console.log(endIndex);
   return {
     limit,
     startIndex,
