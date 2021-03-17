@@ -9,7 +9,7 @@ import {
 import { addPaginatedInfo, paginate, paginatedResult } from '../utils/paginate';
 import Models from '../models/index';
 
-const { Product } = Models;
+const { Product, Brand } = Models;
 
 export const getPresignedUrl = catchAsync(async (req, res, next) => {
   const { id } = req.auth;
@@ -55,9 +55,20 @@ export const getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.findAll({
     limit,
     offset: page,
+    include: [
+      {
+        model: Brand,
+        attributes: ['name'],
+        as: 'brand'
+      },
+    ],
   });
   const paginatedInfo = await addPaginatedInfo({
-    model: Product, limit, startIndex, endIndex, page
+    model: Product,
+    limit,
+    startIndex,
+    endIndex,
+    page,
   });
   if (!products.length) return respondWithWarning(res, 404, 'No products found');
   const packedResult = paginatedResult(paginatedInfo, products);
@@ -67,4 +78,20 @@ export const getAllProducts = catchAsync(async (req, res, next) => {
     'Products fetched successfully',
     packedResult
   );
+});
+
+export const getProduct = catchAsync(async (req, res, next) => {
+  const { productId } = req.params;
+  const product = await Product.findOne({
+    where: { id: productId },
+    include: [
+      {
+        model: Brand,
+        attributes: ['name'],
+        as: 'brand'
+      },
+    ],
+  });
+  if (!product) return respondWithWarning(res, 404, 'No product found');
+  return respondWithSuccess(res, 200, 'Product fetched successfully', product);
 });

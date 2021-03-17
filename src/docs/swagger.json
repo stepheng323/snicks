@@ -278,7 +278,44 @@
         }
       }
     },
-
+    "/product/{productId}": {
+      "get": {
+        "tags": ["product"],
+        "summary": "Find product by ID",
+        "description": "View a products in the store",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "Id of the product to return",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema":{
+              "$ref":"#/definitions/AddProductSuccessResponse"
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "schema": {
+              "$ref": "#/definitions/NoResultResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerError"
+            }
+          }
+        }
+      }
+    },
     "/product/presignUrl": {
       "get": {
         "tags": ["product"],
@@ -570,10 +607,6 @@
           "type": "boolean",
           "example": true
         },
-        "message": {
-          "type": "string",
-          "example": "Product created successfully"
-        },
         "payload": {
           "type": "object",
           "properties": {
@@ -617,7 +650,7 @@
         }
       }
     },
-    "ForbiddenResponse":{
+    "ForbiddenResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -630,7 +663,7 @@
         }
       }
     },
-    "NoResultResponse":{
+    "NoResultResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -643,7 +676,7 @@
         }
       }
     },
-    "PresignUrlResponse":{
+    "PresignUrlResponse": {
       "type": "object",
       "properties": {
         "success": {
@@ -656,18 +689,16 @@
         },
         "payload": {
           "type": "object",
-          "properties":{
+          "properties": {
             "url": {
               "type": "url",
-              "example":"https://snicks.s3.us-west-2.amazonaws.com/2/d5afb3f5-f042-4dd9-a3ca-199d95d8e8e5.jpeg?Content-Type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAY57EQNZUK2HH7J5V%2F20210316%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210316T115958Z&X-Amz-Expires=900&X-Amz-Signature=22c2ce8445f4dcf072ec57479869b5a329a134e8ab9066f8140ede99908b793e&X-Amz-SignedHeaders=host"
+              "example": "https://snicks.s3.us-west-2.amazonaws.com/2/d5afb3f5-f042-4dd9-a3ca-199d95d8e8e5.jpeg?Content-Type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAY57EQNZUK2HH7J5V%2F20210316%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210316T115958Z&X-Amz-Expires=900&X-Amz-Signature=22c2ce8445f4dcf072ec57479869b5a329a134e8ab9066f8140ede99908b793e&X-Amz-SignedHeaders=host"
             },
             "key": {
               "type": "string",
-              "example":"2/d5afb3f5-f042-4dd9-a3ca-199d95d8e8e5.jpeg"
+              "example": "2/d5afb3f5-f042-4dd9-a3ca-199d95d8e8e5.jpeg"
             }
-
           }
-          
         }
       }
     },
