@@ -27,6 +27,9 @@ export default {
         type: Sequelize.STRING,
         allowNull: false
       },
+      refreshToken: {
+        type: Sequelize.TEXT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

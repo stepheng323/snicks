@@ -10,6 +10,7 @@ import {
   login,
   forgotPassword,
   resetForgotPassword,
+  refreshUserToken,
 } from '../../controllers/user.controller';
 
 const user = Router();
@@ -22,5 +23,6 @@ user.post(
   validateResetForgotPassword,
   resetForgotPassword
 );
+user.get('/refresh-token', refreshUserToken);
 
 export default user;
