@@ -19,7 +19,7 @@ const admin = {
   password: 'olatundela234'
 };
 
-describe('Add Product', () => {
+describe('Product', () => {
   before(async () => {
     await chai.request(app)
       .post(loginUrl)
@@ -361,10 +361,10 @@ describe('Add Product', () => {
         done();
       });
   });
-  it('Should throw error if provided id is not in the system', (done) => {
+  it('Throw error if invalid product id is sent', (done) => {
     chai
       .request(app)
-      .get(`${baseUrl}/${100}`)
+      .get(`${baseUrl}/${1000}`)
       .end((err, res) => {
         expect(res).to.have.status(404);
         expect(res.body.success).to.be.equal(false);

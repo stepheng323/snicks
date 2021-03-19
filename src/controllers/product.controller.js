@@ -89,7 +89,7 @@ export const getProduct = catchAsync(async (req, res, next) => {
         model: Brand,
         attributes: ['name'],
         as: 'brand'
-      },
+      }
     ],
   });
   if (!product) return respondWithWarning(res, 404, 'No product found');

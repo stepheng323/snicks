@@ -1,7 +1,9 @@
 import { catchAsync, stripeUserData } from '../utils';
 import { respondWithSuccess, respondWithWarning } from '../helpers/reponseHandler';
 import { hashPassword, comparePassword } from '../helpers/bcrypt';
-import { generateTokenAndExpiry, signRefreshToken, verifyToken } from '../helpers/jwt';
+import {
+  generateTokenAndExpiry, signRefreshToken, verifyRefreshToken, verifyToken
+} from '../helpers/jwt';
 import Model from '../models/index';
 import { sendMail } from '../helpers/nodemailer';
 import { generateForgotPasswordEmail } from '../utils/email';
@@ -25,6 +27,8 @@ export const createUser = catchAsync(async (req, res, next) => {
   const userData = stripeUserData(dataValues);
   const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...userData });
   const refreshToken = await signRefreshToken({ ...userData });
+  user.refreshToken = refreshToken;
+  await user.save();
 
   res.cookie('refreshToken', refreshToken, {
     maxAge: 604800000,
@@ -63,6 +67,8 @@ export const login = catchAsync(async (req, res, next) => {
   const userData = stripeUserData(dataValues);
   const tokenAndTokenExpiry = await generateTokenAndExpiry({ ...userData });
   const refreshToken = await signRefreshToken({ ...userData });
+  user.refreshToken = refreshToken;
+  await user.save();
 
   res.cookie('refreshToken', refreshToken, {
     maxAge: 604800000,
@@ -124,4 +130,26 @@ export const resetForgotPassword = catchAsync(async (req, res, next) => {
     ...user,
     ...tokenAndTokenExpiry,
   });
+});
+
+export const refreshUserToken = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) return respondWithWarning(res, 400, 'No refresh token');
+  const user = await User.findOne({ where: { refreshToken } });
+  if (!user) return respondWithWarning(res, 404, 'refresh token not found');
+
+  const data = verifyRefreshToken(user.refreshToken);
+  if (data) {
+    const {
+      firstName, lastName, email, id,
+    } = data;
+    const tokenAndTokenExpiry = await generateTokenAndExpiry({
+      firstName, lastName, email, id,
+    });
+    const userData = stripeUserData(user.dataValues);
+    return respondWithSuccess(res, 200, 'token generated successfuly', {
+      ...tokenAndTokenExpiry,
+      ...userData,
+    });
+  }
 });

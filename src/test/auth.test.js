@@ -224,4 +224,41 @@ describe('Auth Test', () => {
         });
     });
   });
+
+  describe('REFRESH TOKEN', () => {
+    const validCookie = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZmlyc3ROYW1lIjoiR29yZG9uIiwibGFzdE5hbWUiOiJKYW1lcyIsImVtYWlsIjoic3RlcGhlbmczMjNAZ21haWwuY29tIiwicGhvbmUiOiIyMzQ1NDY2NjU2NSIsInJvbGUiOiJhZG1pbiIsInJlZnJlc2hUb2tlbiI6bnVsbCwiaWF0IjoxNjE2MDI2MjM3LCJleHAiOjE2MTg2MTgyMzd9.gpLDyntBChvpgu9rpsW3wyIrMuVYs1i0k9-ydS2t2Mk'
+    const inValidCookie = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9d.eyJpZCI6MiwiZmlyc3ROYW1lIjoiR29yZG9uIiwibGFzdE5hbWUiOiJKYW1lcyIsImVtYWlsIjoic3RlcGhlbmczMjNAZ21haWwuY29tIiwicGhvbmUiOiIyMzQ1NDY2NjU2NSIsInJvbGUiOiJhZG1pbiIsInJlZnJlc2hUb2tlbiI6bnVsbCwiaWF0IjoxNjE2MDI2MjM3LCJleHAiOjE2MTg2MTgyMzd9.gpLDyntBChvpgu9rpsW3wyIrMuVYs1i0k9-ydS2t2Mk'
+    it('Should return a token if refresh token is valid', (done) => {
+      chai
+        .request(app)
+        .get(`${baseUrl}/refresh-token`)
+        .set('Cookie', validCookie)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+    it('Should throw error if refresh token is not passed in the cookies', (done) => {
+      chai
+        .request(app)
+        .get(`${baseUrl}/refresh-token`)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+    it('Should throw error if refresh is ivalid or expired', (done) => {
+      chai
+        .request(app)
+        .get(`${baseUrl}/refresh-token`)
+        .set('Cookie', inValidCookie)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+  });
 });

@@ -159,6 +159,49 @@
         }
       }
     },
+    "/user/refresh-token": {
+      "get": {
+        "tags": ["user"],
+        "summary": "User generate a new token with thier refresh token",
+        "description": "",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "in": "cookie",
+            "description": "The users refresh token",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid login parameters",
+            "schema": {
+              "$ref": "#/definitions/BadRequest"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "type":"object",
+              "properties": {
+                "success": false,
+                "messge": "No token found"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerError"
+            }
+          }
+        }
+      }
+    },
     "/user/reset-forgot-password": {
       "post": {
         "tags": ["user"],
