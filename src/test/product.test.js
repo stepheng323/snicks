@@ -302,18 +302,6 @@ describe('Product', () => {
         done();
       });
   });
-  it('Unauthenticated user should be able to access product listing', (done) => {
-    chai
-      .request(app)
-      .get(baseUrl)
-      .query({ page: 1, limit: 1 })
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body.success).to.be.equal(true);
-        expect(res.body).to.have.property('message');
-        done();
-      });
-  });
   it('Unauthenticated user should be able to access product listing with pagination', (done) => {
     chai
       .request(app)

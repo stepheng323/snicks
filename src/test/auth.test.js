@@ -232,10 +232,10 @@ describe('Auth Test', () => {
       chai
         .request(app)
         .get(`${baseUrl}/refresh-token`)
-        .set('Cookie', validCookie)
+        .set('Cookie', `refreshToken=${validCookie}`)
         .end((err, res) => {
-          expect(res).to.have.status(400);
-          expect(res.body.success).to.equal(false);
+          expect(res).to.have.status(200);
+          expect(res.body.success).to.equal(true);
           done();
         });
     });
