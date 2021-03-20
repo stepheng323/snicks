@@ -11,7 +11,7 @@ export const addProductToCart = catchAsync(async (req, res, next) => {
   const { id: userId } = req.auth;
   const { productId } = req.params;
   const product = await Product.findOne({ where: { id: productId } });
-  if (!product) return respondWithWarning(res, 404, 'Invalid Product Id');
+  if (!product) return respondWithWarning(res, 404, 'Product Id not found');
 
   const alreadyInCart = await Cart.findOne({ where: { userId, productId } });
   let cartItem;
@@ -25,5 +25,5 @@ export const addProductToCart = catchAsync(async (req, res, next) => {
     });
   }
 
-  return respondWithSuccess(res, 201, 'Item add to cart succesfully', cartItem);
+  return respondWithSuccess(res, 201, 'Item added to cart succesfully', cartItem);
 });
