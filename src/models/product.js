@@ -56,6 +56,10 @@ export default (sequelize, DataTypes) => {
       as: 'productReviews',
       onDelete: 'CASCADE',
     });
+    Product.hasMany(models.Cart, {
+      foreignKey: 'productId',
+      onDelete: 'CASCADE',
+    });
   };
 
   return Product;
