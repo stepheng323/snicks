@@ -25,5 +25,22 @@ export const addProductToCart = catchAsync(async (req, res, next) => {
     });
   }
 
-  return respondWithSuccess(res, 201, 'Item added to cart succesfully', cartItem);
+  return respondWithSuccess(
+    res,
+    201,
+    'Item added to cart succesfully',
+    cartItem
+  );
+});
+
+export const getCartItems = catchAsync(async (req, res, next) => {
+  const { id: userId } = req.auth;
+  const cartItems = await Cart.findAll({ where: { userId } });
+  if (!cartItems.length) respondWithWarning(res, 404, 'No items in cart');
+  return respondWithSuccess(
+    res,
+    200,
+    'cart items fetched successfully',
+    cartItems
+  );
 });
