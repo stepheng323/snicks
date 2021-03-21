@@ -73,4 +73,43 @@ describe('Cart', () => {
         done();
       });
   });
+  it('Should list all items in cart of a signed in user', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('payload');
+        expect(res.body.payload).to.be.an('array');
+        done();
+      });
+  });
+  it('Should list all items in cart of a signed in user', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}`)
+      .set('Authorization', userToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body).to.have.property('message');
+        expect(res.body).to.have.property('payload');
+        expect(res.body.payload).to.be.an('array');
+        done();
+      });
+  });
+  it('Should throw error for unauthenticated request to view cart items ', (done) => {
+    chai
+      .request(app)
+      .get(`${baseUrl}`)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        expect(res.body.success).to.be.equal(false);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
 });

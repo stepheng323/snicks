@@ -438,6 +438,38 @@
           }
         }
       }
+    }, 
+    "/cart": {
+      "get": {
+        "tags": ["cart"],
+        "security": [{ "BearerToken": [] }],
+        "summary": "View Products in cart",
+        "description": "An authenticated user can add view products in cart",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/NoResultResponse"
+            }
+          },
+          "401": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/InvalidLogin"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerError"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
