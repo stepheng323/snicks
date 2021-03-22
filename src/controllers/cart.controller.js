@@ -44,3 +44,14 @@ export const getCartItems = catchAsync(async (req, res, next) => {
     cartItems
   );
 });
+
+export const deletCartItem = catchAsync(async (req, res, next) => {
+  const { id: userId } = req.auth;
+  const { cartId } = req.params;
+  const cartItem = await Cart.findByPk(cartId);
+  if (!cartItem) return respondWithWarning(res, 404, 'no cart item found');
+  const { dataValues } = cartItem;
+  if (userId !== dataValues.userId) return respondWithWarning(res, 403, 'you are not authorised to perform this action');
+  await cartItem.destroy();
+  return respondWithSuccess(res, 200, 'product removed from cart successfully');
+});
