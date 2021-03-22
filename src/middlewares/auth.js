@@ -1,5 +1,6 @@
 import { verifyToken } from '../helpers/jwt';
 import { respondWithWarning } from '../helpers/reponseHandler';
+import { catchAsync } from '../utils';
 
 export const checkAuth = (req, res, next) => {
   let token = req.headers.authorization;
@@ -28,5 +29,4 @@ export const restrictTo = (...roles) => (req, res, next) => {
     );
   }
   next();
-
 };
