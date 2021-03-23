@@ -36,6 +36,7 @@ export default (sequelize, DataTypes) => {
     User.hasMany(models.Product, { foreignKey: 'userId', onDelete: 'CASCADE' });
     User.hasMany(models.Cart, { foreignKey: 'userId', onDelete: 'CASCADE' });
     User.hasMany(models.Review, { foreignKey: 'userId', onDelete: 'CASCADE' });
+    User.hasMany(models.Address, { foreignKey: 'userId', onDelete: 'CASCADE' });
   };
   return User;
 };

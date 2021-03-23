@@ -11,7 +11,9 @@ import {
   forgotPassword,
   resetForgotPassword,
   refreshUserToken,
+  addShippingAddress
 } from '../../controllers/user.controller';
+import { checkAuth } from '../../middlewares/auth';
 
 const user = Router();
 
@@ -24,5 +26,6 @@ user.post(
   resetForgotPassword
 );
 user.get('/refresh-token', refreshUserToken);
+user.post('/address', checkAuth, addShippingAddress);
 
 export default user;
