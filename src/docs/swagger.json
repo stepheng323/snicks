@@ -438,7 +438,7 @@
           }
         }
       }
-    }, 
+    },
     "/cart": {
       "get": {
         "tags": ["cart"],
@@ -469,12 +469,14 @@
             }
           }
         }
-      },
+      }
+    },
+    "/cart/{cartId}": {
       "delete": {
         "tags": ["cart"],
         "security": [{ "BearerToken": [] }],
-        "summary": "View a product from cart",
-        "description": "An user can delete his/her",
+        "summary": "Delete a product from cart",
+        "description": "A user can delete his/her item from cart",
         "produces": ["application/json"],
         "parameters": [
           {
@@ -484,6 +486,58 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/NoResultResponse"
+            }
+          },
+          "401": {
+            "description": "Authentication Error",
+            "schema": {
+              "$ref": "#/definitions/InvalidLogin"
+            }
+          },
+          "403": {
+            "description": "Insufficient permission",
+            "schema": {
+              "$ref": "#/definitions/ForbiddenResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ServerError"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["cart"],
+        "security": [{ "BearerToken": [] }],
+        "summary": "update a product in cart",
+        "description": "An user can update his/her cart item",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "Id of the cart Item to update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "",
+            "required": true
           }
         ],
         "responses": {

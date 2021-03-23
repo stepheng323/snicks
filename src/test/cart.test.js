@@ -22,14 +22,16 @@ let user2Token;
 
 describe('Cart', () => {
   before(async () => {
-    await chai.request(app)
+    await chai
+      .request(app)
       .post(loginUrl)
       .send(user1)
       .then((res) => {
         user1Token = res.body.payload.token;
         expect(res.status).to.equal(200);
       });
-    await chai.request(app)
+    await chai
+      .request(app)
       .post(loginUrl)
       .send(user2)
       .then((res) => {
@@ -131,6 +133,46 @@ describe('Cart', () => {
       .set('Authorization', user2Token)
       .end((err, res) => {
         expect(res).to.have.status(403);
+        expect(res.body.success).to.be.equal(false);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
+  it('authenticated user should be able to update a cart item', (done) => {
+    chai
+      .request(app)
+      .patch(`${baseUrl}/5`)
+      .send({ quantity: 2 })
+      .set('Authorization', user1Token)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.success).to.be.equal(true);
+        expect(res.body.payload).to.have.property('id');
+        expect(res.body.payload).to.have.property('userId');
+        expect(res.body.payload).to.have.property('productId');
+        expect(res.body.payload).to.have.property('quantity');
+        done();
+      });
+  });
+  it('unauthenticated user should not be able to update a cart item', (done) => {
+    chai
+      .request(app)
+      .patch(`${baseUrl}/5`)
+      .send({ quantity: 2 })
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        expect(res.body.success).to.be.equal(false);
+        expect(res.body).to.have.property('message');
+        done();
+      });
+  });
+  it('should throw error if quantity is not sent in body', (done) => {
+    chai
+      .request(app)
+      .patch(`${baseUrl}/5`)
+      .set('Authorization', user1Token)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
         expect(res.body.success).to.be.equal(false);
         expect(res.body).to.have.property('message');
         done();
