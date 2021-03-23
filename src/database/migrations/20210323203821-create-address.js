@@ -1,6 +1,6 @@
 export default {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('addresses', {
+    await queryInterface.createTable('Addresses', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,7 +11,7 @@ export default {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'Users',
           key: 'id'
         }
       },
@@ -53,6 +53,6 @@ export default {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('addresses');
+    await queryInterface.dropTable('Addresses');
   }
 };

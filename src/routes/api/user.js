@@ -4,6 +4,7 @@ import {
   validateLogin,
   validateForgotPassword,
   validateResetForgotPassword,
+  validateAddress
 } from '../../middlewares/authValidation';
 import {
   createUser,
@@ -26,6 +27,6 @@ user.post(
   resetForgotPassword
 );
 user.get('/refresh-token', refreshUserToken);
-user.post('/address', checkAuth, addShippingAddress);
+user.post('/address', checkAuth, validateAddress, addShippingAddress);
 
 export default user;
