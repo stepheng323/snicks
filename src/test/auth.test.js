@@ -9,6 +9,13 @@ const baseUrl = '/api/v1/user';
 const signupUrl = '/api/v1/user';
 const loginUrl = '/api/v1/user/login';
 
+let userToken;
+
+const user = {
+  email: 'sgagnonpie@gmail.com',
+  password: 'olatundela234'
+};
+
 describe('Auth Test', () => {
   describe('Account Creation', () => {
     it('A user should be able to sign up ', (done) => {
@@ -226,8 +233,8 @@ describe('Auth Test', () => {
   });
 
   describe('REFRESH TOKEN', () => {
-    const validCookie = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZmlyc3ROYW1lIjoiR29yZG9uIiwibGFzdE5hbWUiOiJKYW1lcyIsImVtYWlsIjoic3RlcGhlbmczMjNAZ21haWwuY29tIiwicGhvbmUiOiIyMzQ1NDY2NjU2NSIsInJvbGUiOiJhZG1pbiIsInJlZnJlc2hUb2tlbiI6bnVsbCwiaWF0IjoxNjE2MDI2MjM3LCJleHAiOjE2MTg2MTgyMzd9.gpLDyntBChvpgu9rpsW3wyIrMuVYs1i0k9-ydS2t2Mk'
-    const inValidCookie = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9d.eyJpZCI6MiwiZmlyc3ROYW1lIjoiR29yZG9uIiwibGFzdE5hbWUiOiJKYW1lcyIsImVtYWlsIjoic3RlcGhlbmczMjNAZ21haWwuY29tIiwicGhvbmUiOiIyMzQ1NDY2NjU2NSIsInJvbGUiOiJhZG1pbiIsInJlZnJlc2hUb2tlbiI6bnVsbCwiaWF0IjoxNjE2MDI2MjM3LCJleHAiOjE2MTg2MTgyMzd9.gpLDyntBChvpgu9rpsW3wyIrMuVYs1i0k9-ydS2t2Mk'
+    const validCookie = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZmlyc3ROYW1lIjoiR29yZG9uIiwibGFzdE5hbWUiOiJKYW1lcyIsImVtYWlsIjoic3RlcGhlbmczMjNAZ21haWwuY29tIiwicGhvbmUiOiIyMzQ1NDY2NjU2NSIsInJvbGUiOiJhZG1pbiIsInJlZnJlc2hUb2tlbiI6bnVsbCwiaWF0IjoxNjE2MDI2MjM3LCJleHAiOjE2MTg2MTgyMzd9.gpLDyntBChvpgu9rpsW3wyIrMuVYs1i0k9-ydS2t2Mk';
+    const inValidCookie = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9d.eyJpZCI6MiwiZmlyc3ROYW1lIjoiR29yZG9uIiwibGFzdE5hbWUiOiJKYW1lcyIsImVtYWlsIjoic3RlcGhlbmczMjNAZ21haWwuY29tIiwicGhvbmUiOiIyMzQ1NDY2NjU2NSIsInJvbGUiOiJhZG1pbiIsInJlZnJlc2hUb2tlbiI6bnVsbCwiaWF0IjoxNjE2MDI2MjM3LCJleHAiOjE2MTg2MTgyMzd9.gpLDyntBChvpgu9rpsW3wyIrMuVYs1i0k9-ydS2t2Mk';
     it('Should return a token if refresh token is valid', (done) => {
       chai
         .request(app)
@@ -257,6 +264,84 @@ describe('Auth Test', () => {
         .end((err, res) => {
           expect(res).to.have.status(400);
           expect(res.body.success).to.equal(false);
+          done();
+        });
+    });
+  });
+
+  describe('User Address', () => {
+    before(async () => {
+      await chai.request(app)
+        .post(loginUrl)
+        .send(user)
+        .then((res) => {
+          userToken = res.body.payload.token;
+          expect(res.status).to.equal(200);
+        });
+    });
+
+    it('Should be able to add shipping address ', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/address`)
+        .send({
+          firstName: 'adedoyin',
+          lastName: 'oyebanji',
+          mobileNumber: '+234799053345',
+          streetAddress: '14 omolola close',
+          state: 'lagos',
+          lga: 'festac'
+        })
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body.success).to.equal(true);
+          expect(res.body.payload).to.have.a.property('id');
+          expect(res.body.payload).to.have.a.property('userId');
+          expect(res.body.payload).to.have.a.property('firstName');
+          expect(res.body.payload).to.have.a.property('lastName');
+          expect(res.body.payload).to.have.a.property('state');
+          expect(res.body.payload).to.have.a.property('lga');
+          expect(res.body.payload).to.have.a.property('mobileNumber');
+          expect(res.body.payload).to.have.a.property('streetAddress');
+          done();
+        });
+    });
+    it('Should throw error if unauthenticted user tries to add address', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/address`)
+        .send({
+          firstName: 'adedoyin',
+          lastName: 'oyebanji',
+          mobileNumber: '+234799053345',
+          streetAddress: '14 omolola close',
+          state: 'lagos',
+          lga: 'festac'
+        })
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.message).to.be.a('string');
+          done();
+        });
+    });
+    it('Should throw error if a required field is not sent in the body', (done) => {
+      chai
+        .request(app)
+        .post(`${baseUrl}/address`)
+        .send({
+          lastName: 'oyebanji',
+          mobileNumber: '+234799053345',
+          streetAddress: '14 omolola close',
+          state: 'lagos',
+          lga: 'festac'
+        })
+        .set('Authorization', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body.success).to.equal(false);
+          expect(res.body.message).to.be.a('string');
           done();
         });
     });
