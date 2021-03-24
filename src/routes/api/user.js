@@ -4,6 +4,7 @@ import {
   validateLogin,
   validateForgotPassword,
   validateResetForgotPassword,
+  validateAddress
 } from '../../middlewares/authValidation';
 import {
   createUser,
@@ -11,7 +12,9 @@ import {
   forgotPassword,
   resetForgotPassword,
   refreshUserToken,
+  addShippingAddress
 } from '../../controllers/user.controller';
+import { checkAuth } from '../../middlewares/auth';
 
 const user = Router();
 
@@ -24,5 +27,6 @@ user.post(
   resetForgotPassword
 );
 user.get('/refresh-token', refreshUserToken);
+user.post('/address', checkAuth, validateAddress, addShippingAddress);
 
 export default user;

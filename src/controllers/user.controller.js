@@ -1,14 +1,20 @@
 import { catchAsync, stripeUserData } from '../utils';
-import { respondWithSuccess, respondWithWarning } from '../helpers/reponseHandler';
+import {
+  respondWithSuccess,
+  respondWithWarning,
+} from '../helpers/reponseHandler';
 import { hashPassword, comparePassword } from '../helpers/bcrypt';
 import {
-  generateTokenAndExpiry, signRefreshToken, verifyRefreshToken, verifyToken
+  generateTokenAndExpiry,
+  signRefreshToken,
+  verifyRefreshToken,
+  verifyToken,
 } from '../helpers/jwt';
 import Model from '../models/index';
 import { sendMail } from '../helpers/nodemailer';
 import { generateForgotPasswordEmail } from '../utils/email';
 
-const { User } = Model;
+const { User, Address } = Model;
 
 export const createUser = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -140,11 +146,12 @@ export const refreshUserToken = catchAsync(async (req, res, next) => {
 
   const data = verifyRefreshToken(user.refreshToken);
   if (data) {
-    const {
-      firstName, lastName, email, id,
-    } = data;
+    const { firstName, lastName, email, id } = data;
     const tokenAndTokenExpiry = await generateTokenAndExpiry({
-      firstName, lastName, email, id,
+      firstName,
+      lastName,
+      email,
+      id,
     });
     const userData = stripeUserData(user.dataValues);
     return respondWithSuccess(res, 200, 'token generated successfuly', {
@@ -152,4 +159,13 @@ export const refreshUserToken = catchAsync(async (req, res, next) => {
       ...userData,
     });
   }
+});
+
+export const addShippingAddress = catchAsync(async (req, res, next) => {
+  const { id: userId } = req.auth;
+  const address = await Address.create({
+    ...req.body,
+    userId,
+  });
+  return respondWithSuccess(res, 201, 'address added successfully', address);
 });
